@@ -3,13 +3,13 @@ export default {
     {
       id: 1,
       name: 'Молоко',
-      cost: 33,
+      cost: '33.00',
       count: 1
     },
     {
       id: 2,
       name: 'Cыр',
-      cost: 55,
+      cost: '55.00',
       count: 1
     }
   ]

@@ -1,9 +1,9 @@
 <template>
   <q-page padding>
     <div class="column">
-      <div class="col">
-        <span class="text-h6">
-          Общая сумма в корзине: <b>{{ cost }}</b>
+      <div class="col q-py-sm">
+        <span class="text-h5">
+          В корзине <b>{{ count }}</b> товарa(ов)
         </span>
       </div>
       <div class="col">
@@ -12,18 +12,26 @@
             <q-item-section avatar>
               {{ item.name }}
             </q-item-section>
-            <q-item-section>{{ item.cost }}</q-item-section>
-            <q-item-section> x {{ item.count }}</q-item-section>
+            <q-item-section></q-item-section>
+            <q-item-section side
+              ><small>{{ item.cost }}</small></q-item-section
+            >
+            <q-item-section side
+              ><small>{{ item.count }}</small></q-item-section
+            >
 
             <q-item-section side>
-              {{ (item.count * item.cost).toFixed() }}
+              <b>{{ (item.count * item.cost).toFixed(2) }}</b>
             </q-item-section>
           </q-item>
         </q-list>
       </div>
+      <div class="text-right text-h5">
+        сумма: <b>{{ cost }} $</b>
+      </div>
       <div class="col">
         <q-btn @click="addItem">
-          add
+          добавить случайный товар
         </q-btn>
       </div>
     </div>
@@ -41,6 +49,9 @@ export default {
     },
     cost() {
       return this.$store.getters["cart/sum"];
+    },
+    count() {
+      return this.$store.getters["cart/count"];
     }
   },
 

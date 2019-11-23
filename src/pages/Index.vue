@@ -3,12 +3,18 @@
     <q-btn v-if="!scaner" @click="showScaner">
       сканировать
     </q-btn>
+    <ProductDialog />
   </q-page>
 </template>
 
 <script>
+import ProductDialog from "../components/ProductDialog";
 export default {
   name: "PageIndex",
+
+  components: {
+    ProductDialog
+  },
 
   data() {
     return {
@@ -17,7 +23,7 @@ export default {
   },
 
   mounted() {
-    this.checkScanerPermission();
+    // this.checkScanerPermission();
   },
   methods: {
     showScaner() {
