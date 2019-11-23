@@ -1,45 +1,6 @@
-const randomProductsNames = [
-    {
-        name: "Молоко",
-        id: 1
-    },
-    {
-        name: "Cыр",
-        id: 2
-    },
-    {
-        name: "Колбаса",
-        id: 3
-    },
-    {
-        name: "Селедка",
-        id: 4
-    },
-    {
-        name: "Яйца",
-        id: 5
-    },
-    {
-        name: "Хлеб",
-        id: 6
-    },
-    {
-        name: "Чай",
-        id: 7
-    },
-    {
-        name: "Сметана",
-        id: 8
-    },
-    {
-        name: "Вареники",
-        id: 9
-    }
-]
-
 export function addRandomProduct(state) {
-    const randomProduct = randomProductsNames[
-        Math.floor(Math.random() * randomProductsNames.length)
+    const randomProduct = state.availableProducts[
+        Math.floor(Math.random() * state.availableProducts.length)
     ]
 
     if (state.items.find(item => item.id == randomProduct.id) != undefined) {
@@ -55,4 +16,16 @@ export function addRandomProduct(state) {
     }
 
 
+}
+
+export function selectRandomProduct(state) {
+    const randomProduct = state.availableProducts[
+        Math.floor(Math.random() * state.availableProducts.length)
+    ]
+
+    state.selectedProduct = randomProduct
+}
+
+export function unselectProduct(state) {
+    state.selectedProduct = null
 }
