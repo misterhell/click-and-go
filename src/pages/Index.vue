@@ -22,16 +22,19 @@
         </div>
       </q-card-section>
 
-      <q-card-section class="text-center q-mt-xl">
+      <!-- <q-card-section class="text-center q-mt-xl">
         <span>Товар найден!</span>
-      </q-card-section>
+      </q-card-section> -->
 
       <q-card-actions align="around">
-        <q-btn @click="back" style="width: 120px">Назад</q-btn>
+        <item-counter v-model="itemsCount" />
+      </q-card-actions>
+      <q-card-actions align="around" class="q-mt-lg">
+        <q-btn @click="back" style="width: 130px; height: 55px">Назад</q-btn>
         <q-btn
-          :to="{ path: '/add-to-cart' }"
+          @click="addToCart"
           color="primary"
-          style="width: 120px"
+          style="width: 130px; height: 55px"
           >Добавить в корзину</q-btn
         >
       </q-card-actions>
@@ -40,18 +43,19 @@
 </template>
 
 <script>
-import ProductDialog from "../components/ProductDialog";
+import ItemCounter from "../components/ItemCounter";
 export default {
   name: "PageIndex",
 
   components: {
-    ProductDialog
+    ItemCounter
   },
 
   data() {
     return {
       scaner: false,
-      productFounded: true
+      productFounded: true,
+      itemsCount: 1
     };
   },
 
@@ -78,6 +82,7 @@ export default {
       });
 
       QRScanner.show();
+      this.dropCounterToDefault();
     },
 
     checkScanerPermission() {
@@ -94,10 +99,38 @@ export default {
       });
     },
 
-    add() {},
-
     back() {
       this.$store.commit("cart/unselectProduct");
+    },
+
+    dropCounterToDefault() {
+      this.itemsCount = 1;
+    },
+
+    addToCart() {
+      this.$store
+        .dispatch("cart/addToCart")
+        .then(() => {
+          this.$q.notify({
+            position: "top",
+            timeout: 2500,
+            message: "Товар добавлен в корзину!",
+            actions: [{ icon: "close", color: "white" }],
+            color: "teal"
+          });
+        })
+        .catch(() => {
+          this.$q.notify({
+            position: "top",
+            timeout: 2500,
+            message: "Ошибка! Что-то пошло не так",
+            actions: [{ icon: "close", color: "white" }],
+            color: "negative"
+          });
+        })
+        .finally(() => {
+          this.dropCounterToDefault();
+        });
     }
   }
 };

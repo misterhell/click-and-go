@@ -29,10 +29,13 @@
       <div class="text-right text-h5">
         сумма: <b>{{ cost }} $</b>
       </div>
-      <div class="col">
-        <q-btn @click="addItem">
-          добавить случайный товар
-        </q-btn>
+      <div class="col text-center q-mt-md">
+        <q-btn
+          @click="$router.push('/pay')"
+          color="primary"
+          icon-right="payment"
+          label="перейти к оплате"
+        />
       </div>
     </div>
   </q-page>
@@ -40,6 +43,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
+
 export default {
   computed: {
     items: {
