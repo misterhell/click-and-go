@@ -6,6 +6,5 @@ export function sum(state) {
 }
 
 export function count(state) {
-
     return state.items.reduce((acc, item) => acc + item.count, 0)
 }

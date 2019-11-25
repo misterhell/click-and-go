@@ -2,7 +2,7 @@
   <q-page padding>
     <div class="column">
       <div class="col q-py-sm">
-        <span class="text-h5">
+        <span class="text-h6">
           В корзине <b>{{ count }}</b> товарa(ов)
         </span>
       </div>

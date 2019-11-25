@@ -60,8 +60,8 @@ export default {
   },
 
   mounted() {
-    // this.checkScanerPermission();
-    this.$store.commit("cart/selectRandomProduct");
+    this.checkScanerPermission();
+    // this.$store.commit("cart/selectRandomProduct");
   },
 
   computed: {
@@ -78,11 +78,18 @@ export default {
           alert("error:", err);
         } else {
           this.$store.commit("cart/selectRandomProduct");
+          this.hideScaner();
         }
       });
 
       QRScanner.show();
       this.dropCounterToDefault();
+    },
+
+    hideScaner() {
+      QRScanner.cancelScan(() => {
+        QRScanner.hide();
+      });
     },
 
     checkScanerPermission() {
@@ -95,12 +102,15 @@ export default {
           ) {
             QRScanner.openSettings();
           }
+        } else {
+          this.showScaner();
         }
       });
     },
 
     back() {
       this.$store.commit("cart/unselectProduct");
+      this.showScaner();
     },
 
     dropCounterToDefault() {
@@ -119,6 +129,7 @@ export default {
           actions: [{ icon: "close", color: "white" }],
           color: "teal"
         });
+        this.showScaner();
       } catch (e) {
         this.$q.notify({
           position: "top",
