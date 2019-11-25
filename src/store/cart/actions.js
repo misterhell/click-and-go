@@ -5,6 +5,7 @@ export function someAction(/* context */) {
 }
 
 
-export function addToCart(productId, count) {
-    console.log('dispatched')
+export function addToCart({ commit }, { count }) {
+    commit('addProductToCart', { count })
+    commit('unselectProduct')
 }

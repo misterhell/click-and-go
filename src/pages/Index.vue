@@ -107,30 +107,29 @@ export default {
       this.itemsCount = 1;
     },
 
-    addToCart() {
-      this.$store
-        .dispatch("cart/addToCart")
-        .then(() => {
-          this.$q.notify({
-            position: "top",
-            timeout: 2500,
-            message: "Товар добавлен в корзину!",
-            actions: [{ icon: "close", color: "white" }],
-            color: "teal"
-          });
-        })
-        .catch(() => {
-          this.$q.notify({
-            position: "top",
-            timeout: 2500,
-            message: "Ошибка! Что-то пошло не так",
-            actions: [{ icon: "close", color: "white" }],
-            color: "negative"
-          });
-        })
-        .finally(() => {
-          this.dropCounterToDefault();
+    async addToCart() {
+      try {
+        await this.$store.dispatch("cart/addToCart", {
+          count: this.itemsCount
         });
+        this.$q.notify({
+          position: "top",
+          timeout: 2500,
+          message: "Товар добавлен в корзину!",
+          actions: [{ icon: "close", color: "white" }],
+          color: "teal"
+        });
+      } catch (e) {
+        this.$q.notify({
+          position: "top",
+          timeout: 2500,
+          message: "Ошибка! Что-то пошло не так:" + e,
+          actions: [{ icon: "close", color: "white" }],
+          color: "negative"
+        });
+      }
+
+      this.dropCounterToDefault();
     }
   }
 };

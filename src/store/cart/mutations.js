@@ -10,13 +10,12 @@ export function addRandomProduct(state) {
     } else {
         state.items.push({
             ...randomProduct,
-            cost: (Math.random() * 100).toFixed(2),
             count: 1
         })
     }
-
-
 }
+
+
 
 export function selectRandomProduct(state) {
     const randomProduct = state.availableProducts[
@@ -28,4 +27,20 @@ export function selectRandomProduct(state) {
 
 export function unselectProduct(state) {
     state.selectedProduct = null
+}
+
+
+export function addProductToCart(state, { count }) {
+    const { id: prodId } = state.selectedProduct
+
+    if (state.items.find(item => item.id == prodId) != undefined) {
+        state
+            .items[state.items.findIndex(item => item.id == prodId)]
+            .count += count
+    } else {
+        state.items.push({
+            ...state.selectedProduct,
+            count: count
+        })
+    }
 }
