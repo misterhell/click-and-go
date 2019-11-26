@@ -44,3 +44,17 @@ export function addProductToCart(state, { count }) {
         })
     }
 }
+
+
+export function clearCart(state) {
+    state.items = []
+    state.selectedProduct = null
+}
+
+export function deleteById(state, id) {
+    state.items = state.items.filter(item => item.id !== id)
+}
+
+export function addCountById(state, { id, count }) {
+    const index = state.items.findIndex(item => item.id == id)
+}

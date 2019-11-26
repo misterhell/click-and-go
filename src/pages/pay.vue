@@ -17,9 +17,13 @@
       </div>
       <div class="row  q-my-sm">
         <div class="col">
-          <div class="col">
-            <q-select filled v-model="to.day" :options="options" />
-          </div>
+          <q-input
+            filled
+            v-model="to"
+            label="Действует до"
+            mask="##/##"
+            fill-mask="#"
+          />
         </div>
         <div class="col q-ml-xs">
           <q-input
@@ -34,6 +38,7 @@
 
       <div class="row q-my-lg">
         <q-btn
+          @click="pay"
           :disable="btnDiasbled"
           label="Оплатить"
           size="lg"
@@ -42,6 +47,9 @@
         />
       </div>
     </div>
+    <q-inner-loading :showing="loading">
+      <q-spinner-ios size="50px" color="primary" />
+    </q-inner-loading>
   </q-page>
 </template>
 
@@ -51,14 +59,12 @@ export default {
     return {
       card: "",
       cvv: "",
-      to: {
-        day: "",
-        year: ""
-      },
-
-      options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+      to: "",
+      loading: false
     };
   },
+
+  mounted() {},
 
   computed: {
     btnDiasbled() {
@@ -67,6 +73,29 @@ export default {
         toDayValid = this.to.day != "";
 
       return !(cardValid && cvvValid && toDayValid);
+    }
+  },
+
+  methods: {
+    pay() {
+      this.loading = true;
+      // request to payment server
+      setTimeout(() => {
+        this.$store.commit("cart/clearCart");
+        this.clearFields();
+        this.$q.notify({
+          position: "top",
+          timeout: 5000,
+          message: "Ваша корзина оплачена! Спасибо за покупку.",
+          actions: [{ icon: "close", color: "white" }],
+          color: "green"
+        });
+        this.loading = false;
+      }, 2000);
+    },
+
+    clearFields() {
+      this.card = this.cvv = this.to = "";
     }
   }
 };

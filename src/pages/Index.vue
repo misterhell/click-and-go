@@ -1,8 +1,19 @@
 <template>
   <q-page class="flex flex-center">
-    <!-- <q-btn v-if="!scaner" @click="showScaner">
-      сканировать
-    </q-btn> -->
+    <div v-if="!slected" class="text-center">
+      <p class="text-h6">
+        Нажмите, <br />
+        чтобы отсканировать <br />
+        код продукта
+      </p>
+      <q-btn
+        @click="showScaner"
+        round
+        icon="crop_free"
+        size="35px"
+        color="teal"
+      />
+    </div>
 
     <q-card v-if="slected" class="q-pa-md">
       <q-card-section>
@@ -51,18 +62,26 @@ export default {
     ItemCounter
   },
 
+  watch: {
+    $route(to, from) {
+      this.hideScaner();
+    }
+  },
+
+  beforeRouteUpdate(to, from, next) {
+    this.hideScaner(() => {
+      next();
+    });
+  },
+
   data() {
     return {
-      scaner: false,
       productFounded: true,
       itemsCount: 1
     };
   },
 
-  mounted() {
-    this.checkScanerPermission();
-    // this.$store.commit("cart/selectRandomProduct");
-  },
+  mounted() {},
 
   computed: {
     slected() {
@@ -72,45 +91,32 @@ export default {
 
   methods: {
     showScaner() {
-      this.scaner = true;
-      QRScanner.scan((err, text) => {
-        if (err) {
-          alert("error:", err);
-        } else {
-          this.$store.commit("cart/selectRandomProduct");
-          this.hideScaner();
-        }
-      });
-
-      QRScanner.show();
       this.dropCounterToDefault();
-    },
+      cordova.plugins.barcodeScanner.scan(
+        ({ text, format, cancelled }) => {
+          if (cancelled) return;
+          console.log(text);
+          console.log(format);
+          this.$store.commit("cart/selectRandomProduct");
+        },
+        error => {
+          alert("Scanning failed: " + error);
+        },
+        {
+          preferFrontCamera: true, // iOS and Android
+          showFlipCameraButton: true, // iOS and Android
+          showTorchButton: true, // iOS and Android
+          prompt: "Place a barcode inside the scan area", // Android
+          resultDisplayDuration: 500,
 
-    hideScaner() {
-      QRScanner.cancelScan(() => {
-        QRScanner.hide();
-      });
-    },
-
-    checkScanerPermission() {
-      QRScanner.getStatus(status => {
-        if (!status.authorized && status.canOpenSettings) {
-          if (
-            confirm(
-              "Для активации сканирования необходимо дать право на использование камеры. Открыть настройки?."
-            )
-          ) {
-            QRScanner.openSettings();
-          }
-        } else {
-          this.showScaner();
+          disableAnimations: true, // iOS
+          disableSuccessBeep: false // iOS and Android
         }
-      });
+      );
     },
 
     back() {
       this.$store.commit("cart/unselectProduct");
-      this.showScaner();
     },
 
     dropCounterToDefault() {
