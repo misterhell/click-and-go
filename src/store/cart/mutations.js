@@ -57,4 +57,5 @@ export function deleteById(state, id) {
 
 export function addCountById(state, { id, count }) {
     const index = state.items.findIndex(item => item.id == id)
+    state.items[index].count += count
 }

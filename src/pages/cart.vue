@@ -18,6 +18,7 @@
           <q-slide-item
             @left="onLeft(item)"
             @right="onRight(item)"
+            @action="slideAction"
             v-for="item in items"
             :key="item.id"
             left-color="green"
@@ -93,24 +94,46 @@ export default {
       this.$store.commit("cart/addRandomProduct");
     },
 
-    onLeft(e) {
+    onLeft({ id, name }) {
       this.$store.commit("cart/addCountById", {
-        id: e.id,
+        id: id,
         count: 1
+      });
+      this.$q.notify({
+        position: "top",
+        timeout: 1000,
+        message: `${name} - товар добавлен`,
+        actions: [{ icon: "close", color: "white" }],
+        color: "secondary"
       });
     },
 
-    onRight(e) {
-      this.$store.commit("cart/deleteById", e.id);
+    onRight({ id, name }) {
+      this.$store.commit("cart/deleteById", id);
+      this.$q.notify({
+        position: "top",
+        timeout: 1000,
+        message: `${name} - товар удален`,
+        actions: [{ icon: "close", color: "white" }],
+        color: "red"
+      });
     },
 
     clearCart() {
       this.$q
         .dialog({
-          title: "Confirm",
-          message: "Хотите удалить все товары из корзины?",
+          title: "Подтвердите",
+          message: "Удалить все товары из корзины?",
           cancel: true,
-          persistent: true
+          persistent: true,
+          ok: {
+            label: "да",
+            flat: true
+          },
+          cancel: {
+            label: "отмена",
+            flat: true
+          }
         })
         .onOk(() => {
           this.$store.commit("cart/clearCart");
@@ -122,6 +145,10 @@ export default {
             color: "secondary"
           });
         });
+    },
+
+    slideAction({ reset }) {
+      reset();
     }
   }
 };

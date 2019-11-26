@@ -95,18 +95,16 @@ export default {
       cordova.plugins.barcodeScanner.scan(
         ({ text, format, cancelled }) => {
           if (cancelled) return;
-          console.log(text);
-          console.log(format);
           this.$store.commit("cart/selectRandomProduct");
         },
         error => {
           alert("Scanning failed: " + error);
         },
         {
-          preferFrontCamera: true, // iOS and Android
+          preferFrontCamera: false, // iOS and Android
           showFlipCameraButton: true, // iOS and Android
           showTorchButton: true, // iOS and Android
-          prompt: "Place a barcode inside the scan area", // Android
+          prompt: "Поместите код в рамку сканера", // Android
           resultDisplayDuration: 500,
 
           disableAnimations: true, // iOS
@@ -135,7 +133,6 @@ export default {
           actions: [{ icon: "close", color: "white" }],
           color: "teal"
         });
-        this.showScaner();
       } catch (e) {
         this.$q.notify({
           position: "top",
